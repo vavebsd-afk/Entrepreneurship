@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Kind of Entrepreneur Are You?</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c: #0a0a0a;
+    --bg: #f5f2eb;
+    --card: #ffffff;
+    --border: #e0dcd4;
+    --muted: #8a8580;
+    --causation: #1a56db;
+    --causation-light: #e8f0ff;
+    --effectuation: #0d7a5f;
+    --effectuation-light: #e3f5ef;
+    --bricolage: #c94b1e;
+    --bricolage-light: #fdeee8;
+    --progress-bg: #e0dcd4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--c);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 760px;
+  }
+
+  /* INTRO SCREEN */
+  .intro {
+    text-align: center;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .intro-tag {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+  }
+
+  .intro h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.2rem;
+    color: var(--c);
+  }
+
+  .intro h1 span {
+    position: relative;
+    display: inline-block;
+  }
+
+  .intro h1 span::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--c);
+    border-radius: 2px;
+  }
+
+  .intro p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .btn-start {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: var(--c);
+    color: var(--bg);
+    border: none;
+    padding: 16px 40px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+
+  .btn-start:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-start:active { transform: scale(0.98); }
+
+  .theory-pills {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .pill {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 100px;
+  }
+
+  .pill-c { background: var(--causation-light); color: var(--causation); }
+  .pill-e { background: var(--effectuation-light); color: var(--effectuation); }
+  .pill-b { background: var(--bricolage-light); color: var(--bricolage); }
+
+  /* QUIZ SCREEN */
+  .quiz { display: none; }
+  .quiz.active { display: block; animation: fadeUp 0.5s ease both; }
+
+  .progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--progress-bg);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--c);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .question-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .question-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--c);
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .choice-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    width: 100%;
+  }
+
+  .choice-btn:hover {
+    border-color: var(--c);
+    transform: translateX(3px);
+  }
+
+  .choice-btn.selected {
+    border-color: var(--c);
+    background: var(--c);
+    color: var(--bg);
+  }
+
+  .choice-btn.selected .choice-letter {
+    background: var(--bg);
+    color: var(--c);
+  }
+
+  .choice-letter {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .choice-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: inherit;
+  }
+
+  .quiz-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.2rem;
+  }
+
+  .btn-next {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: var(--c);
+    color: var(--bg);
+    border: none;
+    padding: 13px 32px;
+    border-radius: 100px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+
+  .btn-next.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .btn-next:hover { transform: translateY(-1px); }
+  .btn-next:active { transform: scale(0.98); }
+
+  /* RESULT SCREEN */
+  .result { display: none; }
+  .result.active { display: block; animation: fadeUp 0.6s ease both; }
+
+  .result-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .result-tag {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 1.2rem;
+  }
+
+  .result-type {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 0.8rem;
+  }
+
+  .result-subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .result-card {
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    border: 1.5px solid transparent;
+  }
+
+  .result-section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    opacity: 0.6;
+  }
+
+  .result-desc {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .result-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 1rem;
+  }
+
+  .trait {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 13px;
+    border-radius: 100px;
+    border: 1px solid transparent;
+  }
+
+  .score-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .score-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    width: 110px;
+    flex-shrink: 0;
+  }
+
+  .score-track {
+    flex: 1;
+    height: 8px;
+    background: var(--progress-bg);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+  }
+
+  .score-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    width: 28px;
+    text-align: right;
+  }
+
+  .btn-restart {
+    display: block;
+    width: 100%;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    padding: 13px;
+    border-radius: 100px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: border-color 0.15s, color 0.15s;
+    text-align: center;
+  }
+
+  .btn-restart:hover { border-color: var(--c); color: var(--c); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- INTRO -->
+  <div class="intro" id="intro">
+    <div class="intro-tag">Entrepreneurship · Fisher (2012)</div>
+    <h1>What kind of<br><span>entrepreneur</span><br>are you?</h1>
+    <div class="theory-pills">
+      <span class="pill pill-c">The Planner</span>
+      <span class="pill pill-e">The Experimenter</span>
+      <span class="pill pill-b">The Maker</span>
+    </div>
+    <p>5 quick scenarios. No right answers. Discover which entrepreneurial logic you naturally lean toward — then we'll explain what it means.</p>
+    <button class="btn-start" onclick="startQuiz()">Start the game →</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz" id="quiz">
+    <div class="progress-bar-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">1 / 5</div>
+    </div>
+    <div class="question-card">
+      <div class="question-num" id="questionNum">Question 1</div>
+      <div class="question-text" id="questionText"></div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <div class="quiz-footer">
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result" id="result">
+    <div class="result-header">
+      <div class="result-tag" id="resultTag">Your type</div>
+      <div class="result-type" id="resultType"></div>
+      <p class="result-subtitle" id="resultSubtitle"></p>
+    </div>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-section-title">What this means</div>
+      <div class="result-desc" id="resultDesc"></div>
+      <div class="result-traits" id="resultTraits"></div>
+    </div>
+
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:20px; padding:1.5rem; margin-bottom:1rem;">
+      <div class="result-section-title" style="opacity:0.5; font-family:'Syne',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:1rem;">Your score breakdown</div>
+      <div class="score-row" id="scoreRow"></div>
+    </div>
+
+    <button class="btn-restart" onclick="restart()">Play again</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    text: "You just graduated. No funding, no co-founder. You want to start a company. What's your very first move?",
+    choices: [
+      { text: "Research the market, identify a real gap, and write a solid business plan before building anything.", type: "C" },
+      { text: "Think about what you're actually good at, who you know, and what you could realistically build right now.", type: "E" },
+      { text: "Open your laptop and start building something — anything — using the skills and tools you already have.", type: "B" }
+    ]
+  },
+  {
+    text: "You have €500 to invest in your startup idea. How do you use it?",
+    choices: [
+      { text: "Spend it on market research, a competitor analysis, and a professional logo to look credible.", type: "C" },
+      { text: "Keep most of it and run tiny experiments — only spend what you'd be okay losing completely.", type: "E" },
+      { text: "Don't spend it at all. Find a way to make it work with what you already own.", type: "B" }
+    ]
+  },
+  {
+    text: "An unexpected opportunity comes up — it wasn't in your plan at all. What do you do?",
+    choices: [
+      { text: "Carefully evaluate it against your goals and financial projections before deciding.", type: "C" },
+      { text: "Jump on it. Unplanned opportunities are exactly where interesting things come from.", type: "E" },
+      { text: "Ask yourself: can I make this work with what I currently have on hand? If yes, go.", type: "B" }
+    ]
+  },
+  {
+    text: "Your startup has almost no resources. How do you feel about that?",
+    choices: [
+      { text: "It's a real problem — you need to raise money or find partners before you can move forward.", type: "C" },
+      { text: "It's fine — constraints limit your downside and actually force you to think more creatively.", type: "E" },
+      { text: "It's normal. You make do with what's there. No excuses, no waiting.", type: "B" }
+    ]
+  },
+  {
+    text: "A competitor just launched a product very similar to yours. What's your response?",
+    choices: [
+      { text: "Do a full competitive analysis, reposition your offer, and update your strategy accordingly.", type: "C" },
+      { text: "Focus on building partnerships instead — find people who can complement you, not compete with you.", type: "E" },
+      { text: "Use your existing resources to respond fast. You don't need a perfect strategy, just a reaction.", type: "B" }
+    ]
+  }
+];
+
+const results = {
+  C: {
+    tag: "The Planner",
+    type: "Causation",
+    subtitle: "You think like a strategist. You want to understand the landscape before you build anything.",
+    desc: "According to Fisher (2012), causation is the traditional model of entrepreneurship: you start with a goal, analyze the market, build a plan, and then execute. It works well in stable, predictable environments — but Fisher found that only 2 out of 6 real startups in his study actually followed this logic. And even then, they combined it with other approaches.",
+    traits: ["Business plan", "Market analysis", "Expected returns", "Risk management"],
+    color: "causation"
+  },
+  E: {
+    tag: "The Experimenter",
+    type: "Effectuation",
+    subtitle: "You start with what you have, not with a fixed goal. You let opportunities emerge as you go.",
+    desc: "Effectuation (Sarasvathy, 2001) says: forget the perfect plan. Start with who you are, what you know, and who you know — then see what you can do. You accept uncertainty, you spend only what you're willing to lose, and you treat surprises as opportunities. Fisher found this was the dominant logic in most of his 6 startup case studies.",
+    traits: ["Affordable loss", "Flexibility", "Experimentation", "Partnerships"],
+    color: "effectuation"
+  },
+  B: {
+    tag: "The Maker",
+    type: "Bricolage",
+    subtitle: "You make do. You combine what's on hand to create something new — from (almost) nothing.",
+    desc: "Entrepreneurial bricolage (Baker & Nelson, 2005) is about refusing to be limited by what you don't have. You repurpose existing resources, recombine tools, and hack your way to a solution. Fisher found this in nearly all 6 startups he studied — founders built products from leftover code, spare time, and amateur skills. Classic bricoleurs.",
+    traits: ["Make do", "Recombine resources", "Bias toward action", "Resource creativity"],
+    color: "bricolage"
+  }
+};
+
+let scores = { C: 0, E: 0, B: 0 };
+let currentQ = 0;
+let selectedAnswer = null;
+const letters = ['A', 'B', 'C'];
+
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').classList.add('active');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('questionNum').textContent = `Question ${currentQ + 1}`;
+  document.getElementById('questionText').textContent = q.text;
+  document.getElementById('progressLabel').textContent = `${currentQ + 1} / ${questions.length}`;
+  document.getElementById('progressFill').style.width = `${(currentQ / questions.length) * 100}%`;
+
+  const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  shuffled.forEach((choice, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="choice-letter">${letters[i]}</span><span class="choice-text">${choice.text}</span>`;
+    btn.onclick = () => selectChoice(btn, choice.type, shuffled);
+    choicesEl.appendChild(btn);
+  });
+
+  selectedAnswer = null;
+  document.getElementById('btnNext').classList.remove('visible');
+}
+
+function selectChoice(btn, type, shuffled) {
+  document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedAnswer = type;
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function nextQuestion() {
+  if (!selectedAnswer) return;
+  scores[selectedAnswer]++;
+  currentQ++;
+  if (currentQ < questions.length) {
+    document.getElementById('progressFill').style.width = `${(currentQ / questions.length) * 100}%`;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz').classList.remove('active');
+
+  const winner = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+  const r = results[winner];
+  const total = questions.length;
+
+  const colorMap = {
+    causation: { bg: 'var(--causation-light)', border: 'var(--causation)', text: 'var(--causation)', bar: '#1a56db' },
+    effectuation: { bg: 'var(--effectuation-light)', border: 'var(--effectuation)', text: 'var(--effectuation)', bar: '#0d7a5f' },
+    bricolage: { bg: 'var(--bricolage-light)', border: 'var(--bricolage)', text: 'var(--bricolage)', bar: '#c94b1e' }
+  };
+
+  const cm = colorMap[r.color];
+
+  const tagEl = document.getElementById('resultTag');
+  tagEl.textContent = r.tag;
+  tagEl.style.background = cm.bg;
+  tagEl.style.color = cm.text;
+  tagEl.style.border = `1px solid ${cm.border}`;
+
+  document.getElementById('resultType').textContent = r.type;
+  document.getElementById('resultType').style.color = cm.text;
+  document.getElementById('resultSubtitle').textContent = r.subtitle;
+
+  const card = document.getElementById('resultCard');
+  card.style.background = cm.bg;
+  card.style.borderColor = cm.border;
+
+  document.getElementById('resultDesc').textContent = r.desc;
+
+  const traitsEl = document.getElementById('resultTraits');
+  traitsEl.innerHTML = r.traits.map(t =>
+    `<span class="trait" style="background:white;border-color:${cm.border};color:${cm.text}">${t}</span>`
+  ).join('');
+
+  const scoreRow = document.getElementById('scoreRow');
+  const scoreLabels = { C: 'Causation', E: 'Effectuation', B: 'Bricolage' };
+  const scoreBars = { C: '#1a56db', E: '#0d7a5f', B: '#c94b1e' };
+  scoreRow.innerHTML = ['C', 'E', 'B'].map(k => `
+    <div class="score-item">
+      <div class="score-name" style="font-family:'Syne',sans-serif;font-size:12px;font-weight:600;">${scoreLabels[k]}</div>
+      <div class="score-track">
+        <div class="score-bar" style="width:${(scores[k]/total)*100}%;background:${scoreBars[k]}"></div>
+      </div>
+      <div class="score-val">${scores[k]}/${total}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('result').classList.add('active');
+}
+
+function restart() {
+  scores = { C: 0, E: 0, B: 0 };
+  currentQ = 0;
+  selectedAnswer = null;
+  document.getElementById('result').classList.remove('active');
+  document.getElementById('intro').style.display = 'block';
+}
+</script>
+</body>
+</html>
